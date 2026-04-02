@@ -1,114 +1,80 @@
 @import "tailwindcss";
-@import url("https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Cabinet+Grotesk:wght@300;400;500;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap");
+@import url("https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,500,700,400,300,900&display=swap");
 
-/* ─── DESIGN TOKENS ─── */
-:root {
-  --ink:     #07070f;
-  --paper:   #f0ede6;
-  --accent:  #00f5c8;   /* electric teal */
-  --accent2: #9d6cff;   /* soft violet   */
-  --accent3: #ff5c8a;   /* hot pink      */
-  --violet:  #5b4fff;
-  --coral:   #ff5c3a;
-  --card:    #0d0e1e;
-  --card2:   #0b0c1a;
-  --border:  rgba(255,255,255,0.07);
-  --green:   #22c55e;
-  --red:     #ef4444;
-  /* legacy alias kept for older components */
-  --background: #07070f;
-  --primary:    #00f5c8;
-  --secondary:  #22c55e;
-  --danger:     #ef4444;
-  --text:       #f0ede6;
+@theme {
+  --color-ink: #07070f;
+  --color-paper: #f0ede6;
+  --color-accent: #00f5c8;
+  --color-accent2: #9d6cff;
+  --color-accent3: #ff5c8a;
+  --color-extraviolet: #5b4fff;
+  --color-extracoral: #ff5c3a;
+  --color-extrasky: #3af5d8;
+  --color-card: #0d0e1e;
+  --color-card2: #0b0c1a;
+  --color-border-custom: rgba(255, 255, 255, 0.07);
+  
+  --font-syne: "Syne", sans-serif;
+  --font-mono-dm: "DM Mono", monospace;
+  --font-cabinet: "Cabinet Grotesk", sans-serif;
 }
 
-/* ─── RESET ─── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body, #root { height: 100%; overflow: hidden; }
+@layer base {
 
-body {
-  font-family: 'Cabinet Grotesk', sans-serif;
-  background: var(--ink);
-  color: var(--paper);
-  cursor: none;
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html, body, #root {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-cabinet);
+    cursor: none;
+  }
 }
 
-/* ─── SCROLLBAR ─── */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+/* Custom components that are easier as CSS or used Globally */
+@layer components {
+  .cursor {
+    @apply fixed w-[10px] h-[10px] bg-accent rounded-full pointer-events-none z-[9999];
+    transform: translate(-50%, -50%);
+    transition: width 0.18s, height 0.18s;
+    mix-blend-mode: screen;
+  }
+  
+  .cursor-ring {
+    @apply fixed w-[34px] h-[34px] border-[1.5px] border-accent/40 rounded-full pointer-events-none z-[9998];
+    transform: translate(-50%, -50%);
+  }
 
-/* ─── CUSTOM CURSOR ─── */
-.cursor {
-  position: fixed; width: 10px; height: 10px;
-  background: var(--accent); border-radius: 50%;
-  pointer-events: none; z-index: 9999;
-  transform: translate(-50%,-50%);
-  transition: width .18s, height .18s;
-  mix-blend-mode: screen;
-}
-.cursor-ring {
-  position: fixed; width: 34px; height: 34px;
-  border: 1.5px solid rgba(0,245,200,0.4); border-radius: 50%;
-  pointer-events: none; z-index: 9998;
-  transform: translate(-50%,-50%);
-  transition: width .28s, height .28s;
-}
+  .sidebar-orb {
+    @apply absolute rounded-full blur-[55px] pointer-events-none;
+  }
 
-/* ─── BG GRID ─── */
-.bg-grid {
-  position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background-image:
-    linear-gradient(rgba(91,79,255,0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(91,79,255,0.035) 1px, transparent 1px);
-  background-size: 40px 40px;
-  mask-image: radial-gradient(ellipse at 65% 35%, black 0%, transparent 65%);
+  .glass {
+    @apply bg-card/92 backdrop-blur-[20px] border-b border-border-custom;
+  }
 }
 
-/* ─── ANIMATIONS ─── */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.fade-up { animation: fadeUp .35s ease forwards; }
+/* Custom scrollbar */
+.scroll-area::-webkit-scrollbar { width: 4px; }
+.scroll-area::-webkit-scrollbar-track { background: transparent; }
+.scroll-area::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
 
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(22px); }
-  to   { opacity: 1; transform: translateY(0); }
+@keyframes fadeIn { 
+  from { opacity: 0; transform: translateY(10px); } 
+  to { opacity: 1; transform: translateY(0); } 
+}
+.fade-in { animation: fadeIn 0.3s ease; }
+
+@keyframes slideUp { 
+  from { opacity: 0; transform: translateY(18px); } 
+  to { opacity: 1; transform: translateY(0); } 
 }
 .slide-up { animation: slideUp .28s ease; }
-/* ─── FILTER PILLS ─── */
-.filter-pill {
-  font-family: 'DM Mono', monospace;
-  font-size: 0.62rem;
-  padding: 0.28rem 0.75rem;
-  border-radius: 100px;
-  border: 1px solid;
-  cursor: pointer;
-  transition: all .2s;
-  letter-spacing: 0.05em;
-}
-
-/* ─── MODAL INPUTS ─── */
-.modal-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.28);
-}
-.modal-input {
-  padding: 0.65rem 0.85rem;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  color: var(--paper);
-  font-family: 'Cabinet Grotesk', sans-serif;
-  font-size: 0.86rem;
-  outline: none;
-  transition: border-color .2s;
-  width: 100%;
-}
-.modal-input:focus { border-color: rgba(0,245,200,0.35); }
-.modal-input option { background: #0c0d1d; }

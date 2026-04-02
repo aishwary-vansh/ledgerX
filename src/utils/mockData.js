@@ -63,3 +63,5 @@ export const mockTransactions = [
   { id: 29, date: "2025-04-20", description: "Grocery Shopping",      category: "Food & Dining",    type: "expense", amount: 2100 },
   { id: 30, date: "2025-04-25", description: "Freelance UI Project",  category: "Freelance",        type: "income",  amount: 30000},
 ];
+
+export const ADMIN_PASSWORD = "1234";

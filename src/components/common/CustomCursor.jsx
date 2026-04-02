@@ -36,7 +36,7 @@ const CustomCursor = () => {
     };
 
     document.addEventListener("mousemove", onMove);
-    document.querySelectorAll("button, a, [role='button'], .nav-item, select").forEach((el) => {
+    document.querySelectorAll("button, a, .nav-item, .summary-card, .chart-card, .month-row, .filter-btn, select, input").forEach((el) => {
       el.addEventListener("mouseenter", grow);
       el.addEventListener("mouseleave", shrink);
     });
