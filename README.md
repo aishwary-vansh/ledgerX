@@ -11,12 +11,13 @@ A premium, interactive finance dashboard built to fulfill the requirements of th
 ### Installation
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/aishwary-vansh/ledgerX.git
    cd ledgerx
    ```
 2. Install dependencies:
    ```bash
    npm install
+   npm install -D @tailwindcss/vite
    ```
 3. Run the development server:
    ```bash
