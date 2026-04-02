@@ -1,0 +1,80 @@
+@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Cabinet+Grotesk:wght@300;400;500;700;800&display=swap");
+
+/* ─── DESIGN TOKENS ─── */
+:root {
+  --ink:     #07070f;
+  --paper:   #f0ede6;
+  --accent:  #00f5c8;   /* electric teal */
+  --accent2: #9d6cff;   /* soft violet   */
+  --accent3: #ff5c8a;   /* hot pink      */
+  --violet:  #5b4fff;
+  --coral:   #ff5c3a;
+  --card:    #0d0e1e;
+  --card2:   #0b0c1a;
+  --border:  rgba(255,255,255,0.07);
+  --green:   #22c55e;
+  --red:     #ef4444;
+  /* legacy alias kept for older components */
+  --background: #07070f;
+  --primary:    #00f5c8;
+  --secondary:  #22c55e;
+  --danger:     #ef4444;
+  --text:       #f0ede6;
+}
+
+/* ─── RESET ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body, #root { height: 100%; overflow: hidden; }
+
+body {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  background: var(--ink);
+  color: var(--paper);
+  cursor: none;
+}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+/* ─── CUSTOM CURSOR ─── */
+.cursor {
+  position: fixed; width: 10px; height: 10px;
+  background: var(--accent); border-radius: 50%;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: width .18s, height .18s;
+  mix-blend-mode: screen;
+}
+.cursor-ring {
+  position: fixed; width: 34px; height: 34px;
+  border: 1.5px solid rgba(0,245,200,0.4); border-radius: 50%;
+  pointer-events: none; z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: width .28s, height .28s;
+}
+
+/* ─── BG GRID ─── */
+.bg-grid {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(91,79,255,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(91,79,255,0.035) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse at 65% 35%, black 0%, transparent 65%);
+}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp .35s ease forwards; }
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.slide-up { animation: slideUp .28s ease; }
