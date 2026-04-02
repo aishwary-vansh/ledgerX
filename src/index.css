@@ -78,3 +78,37 @@ body {
   to   { opacity: 1; transform: translateY(0); }
 }
 .slide-up { animation: slideUp .28s ease; }
+/* ─── FILTER PILLS ─── */
+.filter-pill {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  padding: 0.28rem 0.75rem;
+  border-radius: 100px;
+  border: 1px solid;
+  cursor: pointer;
+  transition: all .2s;
+  letter-spacing: 0.05em;
+}
+
+/* ─── MODAL INPUTS ─── */
+.modal-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.28);
+}
+.modal-input {
+  padding: 0.65rem 0.85rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  color: var(--paper);
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 0.86rem;
+  outline: none;
+  transition: border-color .2s;
+  width: 100%;
+}
+.modal-input:focus { border-color: rgba(0,245,200,0.35); }
+.modal-input option { background: #0c0d1d; }
