@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useMemo } from "react";
+import { createContext, useContext, useState, useMemo, useEffect, useCallback } from "react";
 import { mockTransactions } from "../utils/mockData";
 import { sortTransactions } from "../utils/helpers";
 
@@ -6,7 +6,15 @@ const TransactionContext = createContext(null);
 
 export const TransactionProvider = ({ children }) => {
   // Core data
-  const [transactions, setTransactions] = useState(mockTransactions);
+  const [transactions, setTransactions] = useState(() => {
+    const saved = localStorage.getItem("ledgerx_txs");
+    return saved ? JSON.parse(saved) : mockTransactions;
+  });
+
+  // Persist to localStorage
+  useEffect(() => {
+    localStorage.setItem("ledgerx_txs", JSON.stringify(transactions));
+  }, [transactions]);
 
   // Role
   const [role, setRole] = useState("viewer"); // "viewer" | "admin"
@@ -20,6 +28,9 @@ export const TransactionProvider = ({ children }) => {
   const [filterCategory, setFilterCategory] = useState("all");
   const [sortBy, setSortBy] = useState("date");
   const [sortDir, setSortDir] = useState("desc");
+
+  // Editing state
+  const [editingTransaction, setEditingTransaction] = useState(null);
 
   // Filtered + sorted transactions (memoized)
   const filteredTransactions = useMemo(() => {
@@ -104,6 +115,8 @@ export const TransactionProvider = ({ children }) => {
         addTransaction,
         editTransaction,
         deleteTransaction,
+        editingTransaction,
+        setEditingTransaction,
       }}
     >
       {children}

@@ -59,23 +59,39 @@ const PasswordModal = ({ onConfirm, onClose }) => {
 };
 
 const QuickAddModal = ({ onClose }) => {
-  const { addTransaction, transactions } = useTransactions();
+  const { addTransaction, editTransaction, transactions, editingTransaction, setEditingTransaction } = useTransactions();
   const today = new Date().toISOString().split("T")[0];
-  const [form, setForm] = useState({ description: "", amount: "", date: today, category: CATEGORIES[0], type: "expense" });
+  
+  const [form, setForm] = useState(editingTransaction || { 
+    description: "", 
+    amount: "", 
+    date: today, 
+    category: CATEGORIES[0], 
+    type: "expense" 
+  });
+  
   const [error, setError] = useState("");
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
   const handleSave = () => {
     if (!form.description.trim()) return setError("Description is required.");
     if (!form.amount || isNaN(form.amount) || +form.amount <= 0) return setError("Enter a valid amount.");
-    addTransaction({ ...form, amount: parseFloat(form.amount), id: generateId(transactions) });
+    
+    if (editingTransaction) {
+      editTransaction({ ...form, amount: parseFloat(form.amount) });
+      setEditingTransaction(null);
+    } else {
+      addTransaction({ ...form, amount: parseFloat(form.amount), id: generateId(transactions) });
+    }
     onClose();
   };
 
   return (
     <div className="fixed inset-0 bg-black/75 backdrop-blur-[10px] z-[200] flex items-center justify-center p-4" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="w-[450px] rounded-[20px] bg-card2 border border-accent/15 p-7 shadow-[0_40px_100px_rgba(0,0,0,0.65)] slide-up">
-        <div className="font-syne text-[1.15rem] font-extrabold mb-6 tracking-tight">+ New Transaction</div>
+        <div className="font-syne text-[1.15rem] font-extrabold mb-6 tracking-tight">
+          {editingTransaction ? '✏️ Edit Transaction' : '+ New Transaction'}
+        </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="flex flex-col gap-1.5 col-span-2">
             <label className="font-mono-dm text-[0.6rem] tracking-[0.1em] uppercase text-white/30">Description</label>
@@ -106,7 +122,9 @@ const QuickAddModal = ({ onClose }) => {
         {error && <p className="text-red font-medium text-[0.7rem] mt-4">⚠ {error}</p>}
         <div className="flex gap-3 mt-6 justify-end">
           <button className="px-5 py-2 bg-white/5 border border-white/10 rounded-full text-white/45 font-cabinet text-[0.83rem] font-semibold cursor-none hover:bg-white/10 transition-all" onClick={onClose}>Cancel</button>
-          <button className="px-6 py-2 bg-accent text-ink rounded-full font-cabinet text-[0.83rem] font-bold cursor-none hover:scale-105 hover:shadow-[0_0_18px_rgba(0,245,200,0.4)] transition-all" onClick={handleSave}>Save Entry ↗</button>
+          <button className="px-6 py-2 bg-accent text-ink rounded-full font-cabinet text-[0.83rem] font-bold cursor-none hover:scale-105 hover:shadow-[0_0_18px_rgba(0,245,200,0.4)] transition-all" onClick={handleSave}>
+            {editingTransaction ? 'Update Entry ↗' : 'Save Entry ↗'}
+          </button>
         </div>
       </div>
     </div>
@@ -114,7 +132,7 @@ const QuickAddModal = ({ onClose }) => {
 };
 
 const Topbar = () => {
-  const { activePage, role, setRole } = useTransactions();
+  const { activePage, role, setRole, editingTransaction, setEditingTransaction } = useTransactions();
   const [showModal, setShowModal] = useState(false);
   const [showRoleMenu, setShowRoleMenu] = useState(false);
   const [showPass, setShowPass] = useState(false);
@@ -187,7 +205,12 @@ const Topbar = () => {
         </div>
       </header>
       {showPass && <PasswordModal onConfirm={() => { setRole("admin"); setShowPass(false); }} onClose={() => setShowPass(false)} />}
-      {showModal && <QuickAddModal onClose={() => setShowModal(false)} />}
+      {(showModal || editingTransaction) && (
+        <QuickAddModal onClose={() => { 
+          setShowModal(false); 
+          setEditingTransaction(null); 
+        }} />
+      )}
     </>
   );
 };

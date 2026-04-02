@@ -8,7 +8,33 @@ const Transactions = () => {
     searchQuery, setSearchQuery,
     filterType, setFilterType,
     filterCategory, setFilterCategory,
+    role,
+    deleteTransaction,
+    resetFilters,
+    setEditingTransaction
   } = useTransactions();
+
+  const exportToCSV = () => {
+    const headers = ["Date", "Description", "Category", "Type", "Amount"];
+    const rows = filteredTransactions.map(t => [
+      t.date,
+      `"${t.description.replace(/"/g, '""')}"`,
+      t.category,
+      t.type,
+      t.amount
+    ]);
+    
+    const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `ledgerx_report_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   const activeFilter = filterType === 'all' ? (filterCategory === 'all' ? 'ALL' : filterCategory) : filterType;
 
@@ -38,6 +64,12 @@ const Transactions = () => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
+        <button 
+          onClick={exportToCSV}
+          className="font-mono-dm text-[0.7rem] px-5 py-2.5 bg-accent/10 border border-accent/20 rounded-xl text-accent hover:bg-accent/20 transition-all font-bold cursor-none flex items-center gap-2"
+        >
+          <span>📥</span> EXPORT CSV
+        </button>
       </div>
 
       <div className="flex gap-2 flex-wrap mb-2">
@@ -70,6 +102,7 @@ const Transactions = () => {
               <th className="font-mono-dm text-[0.65rem] tracking-[0.1em] uppercase text-white/18 p-[0.65rem_0.85rem] text-left font-medium">Date</th>
               <th className="font-mono-dm text-[0.65rem] tracking-[0.1em] uppercase text-white/18 p-[0.65rem_0.85rem] text-left font-medium">Type</th>
               <th className="font-mono-dm text-[0.65rem] tracking-[0.1em] uppercase text-white/18 p-[0.65rem_0.85rem] text-right font-medium">Amount</th>
+              {role === 'admin' && <th className="font-mono-dm text-[0.65rem] tracking-[0.1em] uppercase text-white/18 p-[0.65rem_0.85rem] text-center font-medium">Actions</th>}
             </tr>
           </thead>
           <tbody>
@@ -109,10 +142,48 @@ const Transactions = () => {
                     {t.type === 'income' ? '+' : '−'}{formatCurrency(t.amount)}
                   </span>
                 </td>
+                {role === 'admin' && (
+                  <td className="p-[0.8rem_0.75rem] text-center">
+                    <div className="flex gap-2 justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button 
+                        className="p-1.5 hover:bg-white/10 rounded-lg text-white/40 hover:text-accent transition-all"
+                        onClick={() => setEditingTransaction(t)}
+                        title="Edit Entry"
+                      >
+                        ✏️
+                      </button>
+                      <button 
+                        className="p-1.5 hover:bg-white/10 rounded-lg text-white/40 hover:text-red transition-all"
+                        onClick={() => {
+                          if (window.confirm("Delete this entry?")) deleteTransaction(t.id);
+                        }}
+                        title="Delete Entry"
+                      >
+                        🗑️
+                      </button>
+                    </div>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
         </table>
+        
+        {filteredTransactions.length === 0 && (
+          <div className="py-20 flex flex-col items-center justify-center text-center gap-4">
+            <div className="text-4xl opacity-20">📂</div>
+            <div>
+              <div className="font-syne text-[1.1rem] font-bold text-white/40">No Transactions Found</div>
+              <p className="text-[0.7rem] text-white/20 font-mono-dm uppercase tracking-wider mt-1">Try adjusting your search or filters</p>
+            </div>
+            <button 
+              onClick={resetFilters}
+              className="mt-2 px-6 py-2 bg-white/5 border border-white/10 rounded-full text-accent font-mono-dm text-[0.65rem] font-bold hover:bg-white/10 transition-all uppercase tracking-widest cursor-none"
+            >
+              Reset All Filters
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

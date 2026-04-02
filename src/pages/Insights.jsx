@@ -69,9 +69,45 @@ const Insights = () => {
 
   return (
     <div className="flex flex-col gap-6 fade-in">
-      <div>
-        <div className="font-mono-dm text-[0.65rem] tracking-[0.15em] uppercase text-accent mb-[0.4rem] font-medium">03 — Analytics</div>
-        <div className="font-syne text-[1.5rem] font-[800] tracking-[-0.03em] leading-none">Financial <span className="text-accent">Insights</span></div>
+      <div className="font-syne text-[1.5rem] font-[800] tracking-[-0.03em] leading-none">Financial Intelligence</div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {(() => {
+          const totalIncome = transactions.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+          const totalExpense = transactions.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+          const savingsRate = totalIncome > 0 ? ((totalIncome - totalExpense) / totalIncome * 100).toFixed(1) : 0;
+          const healthScore = Math.min(100, Math.max(0, savingsRate * 1.5));
+          
+          return (
+            <>
+              <div className="p-5 rounded-2xl bg-card border border-border-custom shadow-sm flex flex-col gap-2 relative overflow-hidden group hover:border-accent/40 transition-all">
+                <div className="absolute -right-4 -top-4 w-20 h-20 bg-accent/5 rounded-full blur-2xl group-hover:bg-accent/15 transition-all"></div>
+                <div className="font-mono-dm text-[0.6rem] tracking-[0.15em] text-white/20 uppercase font-bold">Savings Rate</div>
+                <div className="font-syne text-[1.8rem] font-[800] text-accent leading-none">{savingsRate}%</div>
+                <p className="text-[0.65rem] text-white/30 font-medium mt-1 uppercase tracking-tight">of your total income is saved</p>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-card border border-border-custom shadow-sm flex flex-col gap-2 relative overflow-hidden group hover:border-accent2/40 transition-all">
+                <div className="absolute -right-4 -top-4 w-20 h-20 bg-accent2/5 rounded-full blur-2xl group-hover:bg-accent2/15 transition-all"></div>
+                <div className="font-mono-dm text-[0.6rem] tracking-[0.15em] text-white/20 uppercase font-bold">Financial Health</div>
+                <div className="font-syne text-[1.8rem] font-[800] text-accent2 leading-none">{healthScore.toFixed(0)}/100</div>
+                <div className="w-full h-1 bg-white/5 rounded-full mt-2 overflow-hidden">
+                   <div className="h-full bg-accent2 rounded-full" style={{ width: `${healthScore}%` }}></div>
+                </div>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-card border border-border-custom shadow-sm flex flex-col gap-2 relative overflow-hidden group hover:border-[#ff9d6c]/40 transition-all">
+                <div className="absolute -right-4 -top-4 w-20 h-20 bg-[#ff9d6c]/5 rounded-full blur-2xl group-hover:bg-[#ff9d6c]/15 transition-all"></div>
+                <div className="font-mono-dm text-[0.6rem] tracking-[0.15em] text-white/20 uppercase font-bold">AI Observation</div>
+                <div className="font-syne text-[0.85rem] font-[700] text-paper leading-snug mt-1">
+                  {savingsRate > 20 
+                    ? "Your saving habits are exceptional. Consider diversifying into high-yield investments." 
+                    : "Expenses are high this period. Focus on reducing non-essential leisure spending."}
+                </div>
+              </div>
+            </>
+          );
+        })()}
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-4">

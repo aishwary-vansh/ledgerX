@@ -17,7 +17,6 @@ A premium, interactive finance dashboard built to fulfill the requirements of th
 2. Install dependencies:
    ```bash
    npm install
-   npm install -D @tailwindcss/vite
    ```
 3. Run the development server:
    ```bash
@@ -64,29 +63,30 @@ ledgerx/
 - **Balance Trend**: A smooth line chart visualizing financial trajectory over time.
 - **Categorical Breakdown**: An interactive donut chart showing spending distribution.
 
-### 2. Transactions Ledger
+### 2. Transactions Ledger (CRUD Enabled)
 - **Live Search**: Instant filtering across descriptions and categories.
 - **Type Filtering**: Quick toggles for All, Income, or Expense entries.
-- **Categorization**: Visual pills with unique color-coding for high scannability.
+- **Admin CRUD**: Full Create, Read, Update, and Delete functionality for the ledger.
+- **CSV Export**: Download the current filtered ledger as a CSV file for reporting.
 
 ### 3. Role-Based UI (RBAC)
-- **Role Switcher**: A dedicated toggle in the Sidebar to switch between **Viewer** and **Admin**.
-- **Admin Privileges**: The "+ Add Entry" functionality is context-aware and only visible to Admin users.
-- **Viewer Mode**: A read-only experience that gracefully handles restricted actions.
+- **Identity Switcher**: A dedicated toggle in the Topbar to switch between **Viewer** and **Owner**.
+- **Security**: Switching to "Owner Mode" requires a security key (Pass: `1234`).
+- **Context-Aware UI**: Delete and Edit actions are only visible and accessible in Owner Mode.
 
-### 4. Insights & Analytics
-- **Highest Spending Category**: Automatic detection of the most frequent spending area.
-- **Month-over-Month Growth**: Comparison stats against previous periods.
-- **Category Breakdown**: Detailed progress bars for granular category analysis.
+### 4. Advanced Insights & AI
+- **Savings Rate**: Real-time calculation of your financial efficiency.
+- **AI Observations**: Contextual advice based on your current spending patterns.
+- **Financial Health**: A visual gauge of your overall financial standing.
 
-### 5. State Management & Persistence
-- **Context API**: Centralized `TransactionContext` for managing global state (transactions, filters, roles).
-- **Persistence**: Application state is automatically saved to and restored from `localStorage`.
+### 5. Persistence & State
+- **Context API**: Centralized `TransactionContext` for managing global state.
+- **Local Persistence**: All transactions and modifications are automatically synced to `localStorage`.
 
 ### 6. UI/UX Excellence
 - **Glassmorphism**: Premium frosted-glass aesthetics with vibrant accent orbs.
-- **Responsive Layout**: Fluid design that adapts from high-res monitors to smaller viewports.
-- **Interactivity**: Trailing custom cursor and smooth hover transitions.
+- **Responsive Layout**: Fluid design that adapts from high-res monitors to mobile.
+- **Interactivity**: Custom trailing cursor and smooth hover transitions.
 
 ---
 
