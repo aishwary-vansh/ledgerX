@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTransactions } from "../../contexts/TransactionContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { CATEGORIES, ADMIN_PASSWORD } from "../../utils/mockData";
 import { generateId } from "../../utils/helpers";
 
@@ -133,9 +134,17 @@ const QuickAddModal = ({ onClose }) => {
 
 const Topbar = () => {
   const { activePage, role, setRole, editingTransaction, setEditingTransaction } = useTransactions();
+  const { user, logout } = useAuth();
   const [showModal, setShowModal] = useState(false);
   const [showRoleMenu, setShowRoleMenu] = useState(false);
   const [showPass, setShowPass] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+
+  // Derive initials from the real user's name
+  const initials = user?.name
+    ? user.name.split(" ").map((w) => w[0].toUpperCase()).slice(0, 2).join("")
+    : "??";
+
 
   const handleRoleChange = (newRole) => {
     if (newRole === "admin" && role !== "admin") {
@@ -201,7 +210,36 @@ const Topbar = () => {
           {role === "admin" && (
             <button className="px-[1.1rem] py-[0.45rem] bg-accent text-ink rounded-full font-cabinet text-[0.8rem] font-[700] cursor-none tracking-[0.02em] hover:scale-[1.04] hover:shadow-[0_0_18px_rgba(0,245,200,0.4)] transition-all animate-in fade-in zoom-in duration-300" onClick={() => setShowModal(true)}>+ Add Entry</button>
           )}
-          <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-br from-extraviolet to-accent flex items-center justify-center text-[0.75rem] font-[700] text-white cursor-none transition-transform hover:scale-110 shadow-lg">AV</div>
+
+          {/* User avatar + dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => setShowUserMenu((v) => !v)}
+              className="w-[32px] h-[32px] rounded-full bg-gradient-to-br from-extraviolet to-accent flex items-center justify-center text-[0.75rem] font-[700] text-white cursor-none transition-transform hover:scale-110 shadow-lg"
+              title={user?.name}
+            >
+              {initials}
+            </button>
+            {showUserMenu && (
+              <div className="absolute right-0 top-[calc(100%+10px)] w-[200px] bg-card2/95 backdrop-blur-xl border border-white/10 rounded-2xl p-1.5 shadow-2xl z-50">
+                <div className="px-3 py-2.5 border-b border-white/5 mb-1">
+                  <p className="font-cabinet text-[0.8rem] font-bold text-white truncate">{user?.name}</p>
+                  <p className="font-mono-dm text-[0.55rem] text-white/30 truncate mt-0.5">{user?.email}</p>
+                  <span className="inline-block mt-1.5 font-mono-dm text-[0.5rem] uppercase tracking-widest px-1.5 py-0.5 rounded bg-accent/10 text-accent border border-accent/20">
+                    {user?.role}
+                  </span>
+                </div>
+                <button
+                  onClick={() => { setShowUserMenu(false); logout(); }}
+                  className="flex items-center gap-2.5 w-full p-2.5 rounded-xl text-left text-white/50 hover:bg-red/10 hover:text-red transition-all cursor-none"
+                >
+                  <span className="text-base">🚪</span>
+                  <span className="font-cabinet text-[0.78rem] font-semibold">Sign Out</span>
+                </button>
+              </div>
+            )}
+            {showUserMenu && <div className="fixed inset-0 z-40 cursor-none" onClick={() => setShowUserMenu(false)} />}
+          </div>
         </div>
       </header>
       {showPass && <PasswordModal onConfirm={() => { setRole("admin"); setShowPass(false); }} onClose={() => setShowPass(false)} />}

@@ -1,11 +1,9 @@
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
-import CustomCursor from "../common/CustomCursor";
 
 const Layout = ({ children }) => {
   return (
     <div className="flex w-full h-full overflow-hidden bg-ink">
-      <CustomCursor />
       <Sidebar />
       <main className="flex-1 flex flex-col h-screen overflow-hidden min-w-0">
         <Topbar />
